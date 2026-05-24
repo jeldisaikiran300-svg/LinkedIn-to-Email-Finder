@@ -1,0 +1,55 @@
+import requests
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+class ApolloClient:
+    def __init__(self, api_key: str):
+        self.api_key = api_key
+        self.base_url = "https://api.apollo.io/api/v1"
+
+    def match_person_by_linkedin(self, linkedin_url: str):
+        """
+        Uses Apollo's /people/match endpoint to find a person's details and email
+        based strictly on their LinkedIn URL.
+        """
+        endpoint = f"{self.base_url}/people/match"
+        headers = {
+            "Cache-Control": "no-cache",
+            "Content-Type": "application/json"
+        }
+        data = {
+            "api_key": self.api_key,
+            "linkedin_url": linkedin_url
+        }
+
+        try:
+            response = requests.post(endpoint, headers=headers, json=data)
+            
+            # Rate limit checking
+            if response.status_code == 429:
+                logger.error("Apollo API rate limit exceeded.")
+                return None
+
+            if response.status_code == 200:
+                result = response.json()
+                person = result.get('person', {})
+                if person:
+                    return {
+                        "name": person.get('name'),
+                        "email": person.get('email'),
+                        "title": person.get('title'),
+                        "company": person.get('organization', {}).get('name'),
+                        "apollo_id": person.get('id')
+                    }
+                else:
+                    logger.warning(f"No match found in Apollo for {linkedin_url}")
+                    return None
+            else:
+                logger.error(f"Error {response.status_code}: {response.text}")
+                return None
+
+        except Exception as e:
+            logger.error(f"Failed to connect to Apollo API: {str(e)}")
+            return None
