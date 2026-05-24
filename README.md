@@ -1,13 +1,17 @@
 # LinkedIn to Email Finder
+
 This project takes a list of LinkedIn profile URLs and finds their associated verified emails and profile data (Name, Title, Company) using the Apollo.io API.
 
 It also includes an optional LinkedIn scraper using Selenium, demonstrating how you could extract on-page profile data to augment the Apollo match if needed. However, since Apollo's match endpoint handles LinkedIn URLs natively, manual scraping is generally not required (and saves you from dealing with LinkedIn's aggressive anti-bot mechanisms).
 
-Features
-Apollo API Integration: Search for a B2B contact's email directly by supplying their LinkedIn URL.
-Selenium LinkedIn Scraper (Optional): Extract Name and Headline directly from the LinkedIn DOM. Bypasses the login wall using a li_at session cookie.
-Batch Processing: Reads from an input.csv file and writes all enriched data to an output.csv.
-Prerequisites
+## Features
+
+-Apollo API Integration: Search for a B2B contact's email directly by supplying their LinkedIn URL.
+-Selenium LinkedIn Scraper (Optional): Extract Name and Headline directly from the LinkedIn DOM. Bypasses the login wall using a li_at session cookie.
+-Batch Processing: Reads from an input.csv file and writes all enriched data to an output.csv.
+
+##Prerequisites
+
 Python 3.8+
 Google Chrome (if using the Selenium Scraper)
 An Apollo.io account and API key.
